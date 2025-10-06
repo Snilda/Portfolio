@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Резюме Kirill Rybalko - A4</title>
+    
+    <style>
+/* ---------------------------------- */
+/* 1. Настройки печати (@page) */
+/* ---------------------------------- */
+
+@page {
+    size: A4;
+    margin: 40mm; /* Используем mm для точных полей */
+}
+
+/* ---------------------------------- */
+/* 2. CSS-переменные (Цвета и Шрифты) */
+/* ---------------------------------- */
+
+:root {
+    --color-primary-text: #111;
+    --color-secondary-text: #555;
+    --color-link: #03F;
+    --font-family-main: Tahoma, Geneva, sans-serif;
+
+    --h1-weight: 700; --h1-size: 25px; --h1-line-height: 34px; --h1-letter-spacing: -0.18px;
+    --h2-weight: 700; --h2-size: 17px; --h2-line-height: 20px; --h2-letter-spacing: 0.24px;
+    --h3-weight: 700; --h3-size: 13px; --h3-line-height: 16px; --h3-letter-spacing: 0.36px;
+    --body-weight: 400; --body-size: 13px; --body-line-height: 16px; --body-letter-spacing: 0.36px;
+}
+
+/* ---------------------------------- */
+/* 3. Базовые стили и типографика */
+/* ---------------------------------- */
+
+body {
+    margin: 0; padding: 0;
+    color: var(--color-primary-text); 
+    background: #f0f0f0; 
+    font-family: var(--font-family-main);
+    font-weight: var(--body-weight);
+    font-size: var(--body-size);
+    line-height: var(--body-line-height);
+    letter-spacing: var(--body-letter-spacing);
+}
+
+h1 { /* Имя */
+    font-weight: var(--h1-weight); font-size: var(--h1-size); line-height: var(--h1-line-height); letter-spacing: var(--h1-letter-spacing); margin-top: 0;
+}
+h2 { /* Секции */
+    font-weight: var(--h2-weight); font-size: var(--h2-size); line-height: var(--h2-line-height); letter-spacing: var(--h2-letter-spacing);
+    margin-top: 30px; margin-bottom: 10px; padding-bottom: 3px; border-bottom: 1px solid #ccc;
+}
+h3 { /* Должности */
+    font-weight: var(--h3-weight); font-size: var(--h3-size); line-height: var(--h3-line-height); letter-spacing: var(--h3-letter-spacing);
+    margin-top: 20px; margin-bottom: 5px;
+}
+a { color: var(--color-link); text-decoration: none; }
+strong, b { font-weight: 700; }
+
+/* Стиль для должности, следующей сразу за H1, который будет в col-left */
+#header-name-job p:last-of-type { 
+    font-size: var(--h2-size); 
+    font-weight: var(--h2-weight); 
+    margin-top: 5px; /* Немного ниже имени */
+    margin-bottom: 0;
+    color: var(--color-secondary-text);
+}
+
+/* Стили для списков (опыт) */
+ul { margin: 5px 0 15px 0; padding-left: 20px; list-style: disc; }
+ul li { margin-bottom: 5px; line-height: var(--body-line-height); }
+p { margin-top: 0; margin-bottom: 1em; }
+
+/* ---------------------------------- */
+/* 4. Стили для двух колонок (Шапка) */
+/* ---------------------------------- */
+
+.header-columns {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-start; 
+    margin-bottom: 30px; 
+}
+
+.col-left {
+    flex-grow: 1; 
+    padding-right: 20px;
+}
+
+.col-right {
+    flex-shrink: 0; 
+    text-align: right; 
+}
+
+.col-right p {
+    margin: 0; 
+    line-height: 1.2;
+}
+
+/* ---------------------------------- */
+/* 5. Контейнер документа (A4) */
+/* ---------------------------------- */
+
+.a4-container {
+    width: 595px; min-height: 842px; 
+    margin: 0px auto; 
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+    padding: 40px; 
+    box-sizing: border-box;
+}
+
+/* ---------------------------------- */
+/* 6. Стили для печати (@media print) */
+/* ---------------------------------- */
+
+@media print {
+    body { background: none; padding: 0; margin: 0; }
+    
+    .a4-container {
+        width: auto; min-height: auto; 
+        margin: 0; box-shadow: none; padding: 0; /* Убираем padding, т.к. поля заданы через @page */
+    }
+    
+    /* Критично для переноса страниц */
+    ul li, h3 { page-break-inside: avoid; } /* Не разрывать пункты и заголовки */
+    h2, h3 { page-break-after: avoid; } /* Заголовки не должны быть в конце листа */
+}
+</style>
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+
+    <div class="a4-container" id="cv-output">
+        <p>Загрузка резюме...</p>
+        
+        <div class="header-columns">
+            <div class="col-left" id="header-name-job">
+                </div>
+            <div class="col-right" id="header-contact-info">
+                </div>
+        </div>
+        
+        <div id="cv-body-content">
+            </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const outputContainer = document.getElementById('cv-output');
+            const headerNameJob = document.getElementById('header-name-job');
+            const headerContactInfo = document.getElementById('header-contact-info');
+            const cvBodyContent = document.getElementById('cv-body-content');
+            
+            // 1. Асинхронно загружаем содержимое файла cv.md
+            fetch('cv.md')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Ошибка ${response.status}: Не удалось загрузить файл cv.md. Убедитесь, что вы используете локальный сервер.`);
+                    }
+                    return response.text();
+                })
+                .then(markdownSource => {
+                    
+                    marked.setOptions({ breaks: true });
+                    
+                    // Создаем временный контейнер для парсинга
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = marked.parse(markdownSource);
+                    
+                    // Убираем индикатор загрузки
+                    const loadingIndicator = outputContainer.querySelector('p');
+                    if(loadingIndicator) loadingIndicator.remove();
+
+                    // 2. Определяем элементы шапки (должны быть первыми 5 элементами)
+                    const children = tempDiv.children;
+                    
+                    // Ожидаемая структура: 3x<p> (контакты), 1x<h1> (имя), 1x<p> (должность)
+                    const expectedTags = ['P', 'P', 'P', 'H1', 'P'];
+                    let isStructureValid = children.length >= 5;
+
+                    if (isStructureValid) {
+                        for(let i = 0; i < 5; i++) {
+                            if (children[i].tagName !== expectedTags[i]) {
+                                isStructureValid = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (isStructureValid) {
+                        // Элементы, которые нужно переместить
+                        const contactElements = [children[0], children[1], children[2]];
+                        const nameElements = [children[3], children[4]];
+                        
+                        // Перемещаем контакты в col-right
+                        contactElements.forEach(el => headerContactInfo.appendChild(el.cloneNode(true)));
+                        
+                        // Перемещаем имя и должность в col-left
+                        nameElements.forEach(el => headerNameJob.appendChild(el.cloneNode(true)));
+
+                        // Удаляем перемещенные 5 элементов из начала tempDiv
+                        for(let i = 0; i < 5; i++) {
+                            tempDiv.removeChild(tempDiv.firstChild);
+                        }
+
+                        // 3. Вставляем оставшийся контент (Summary, Experience...) в тело
+                        while (tempDiv.firstChild) {
+                            cvBodyContent.appendChild(tempDiv.firstChild);
+                        }
+                    } else {
+                        // Если структура неверна, выводим все как есть (без колонок)
+                        cvBodyContent.innerHTML = tempDiv.innerHTML;
+                        console.warn("Структура Markdown не соответствует ожиданиям (3P, 1H1, 1P). Шапка не сформирована.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Проблема с загрузкой cv.md:", error);
+                    outputContainer.innerHTML = `<p style="color: red;">Ошибка загрузки CV: ${error.message}</p>`;
+                });
+        });
+    </script>
+</body>
+</html>
