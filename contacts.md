@@ -1,5 +1,4 @@
 # Контакты
 
-📧 email@example.com  
-🔗 [LinkedIn](https://linkedin.com)  
-🎵 [SoundCloud](https://soundcloud.com)  
+📧 oxygenium95@gmail.com  
+🔗 [LinkedIn](http://linkedin.com/in/snilda)
