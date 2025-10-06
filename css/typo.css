@@ -1,22 +1,20 @@
 /* Typography styles */
-h1 {
+body {
   font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: 0px;
+}
+h1 {
   font-weight: 600;
   font-size: 60px;
   line-height: 72px;
   letter-spacing: -1.64px;
 }
 h2 {
-  font-family: 'Inter', sans-serif;
   font-weight: 400;
   font-size: 36px;
   line-height: 48px;
-  letter-spacing: 0px;
-}
-body {
-  font-family: 'Inter', sans-serif;
-  font-weight: 400;
-  font-size: 20px;
-  line-height: 24px;
   letter-spacing: 0px;
 }
