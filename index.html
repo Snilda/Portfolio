@@ -53,41 +53,51 @@
     }
     .projects {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 30px;
       margin-top: 60px;
     }
-    .card {
-      background: #fafafa;
-      border-radius: 20px;
-      padding: 30px;
+    .project-card {
+      background: #f9f9f9;
+      border-radius: 28px;
+      padding: 40px 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       text-align: center;
       transition: transform 0.2s ease;
     }
-    .card:hover {
-      transform: translateY(-4px);
+    .project-card:hover {
+      transform: translateY(-6px);
     }
-    .card img {
-      max-width: 160px;
-      margin: 0 auto 20px;
-      border-radius: 16px;
-      display: block;
+    .project-card img.icon {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 20px;
     }
-    .card h3 {
-      font-size: 18px;
-      margin-bottom: 8px;
+    .project-card h3 {
+      font-size: 20px;
       font-weight: 600;
+      margin-bottom: 8px;
     }
-    .card p {
-      font-size: 14px;
+    .project-card p {
+      font-size: 15px;
       color: #444;
       margin-bottom: 12px;
     }
-    .card a {
-      font-size: 14px;
+    .project-card a {
+      font-size: 15px;
       font-weight: 500;
-      color: #0070f3;
+      color: #0066ff;
       text-decoration: none;
+      margin-bottom: 20px;
+    }
+    .project-card a:hover {
+      text-decoration: underline;
+    }
+    .project-card img.screenshot {
+      max-width: 240px;
+      border-radius: 20px;
     }
     footer {
       max-width: 1100px;
@@ -130,38 +140,42 @@
   <!-- marked.js -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
-    async function loadMarkdown(file, target, isProjects=false) {
+    async function loadMarkdown(file, target) {
       const res = await fetch(file);
-      const md = await res.text();
-      if (isProjects) {
-        // Разбиваем проекты по разделителям (---)
-        const blocks = md.split(/^---$/m);
-        const html = blocks.map(block => {
-          const lines = block.trim().split("\n");
-          const title = lines[0].replace(/^#\s*/, "");
-          const desc = lines[1] || "";
-          const img = lines.find(l => l.startsWith("![]("));
-          const link = lines.find(l => l.startsWith("[Learn more]"));
-          const imgTag = img ? marked.parse(img) : "";
-          const linkTag = link ? marked.parse(link) : "";
-          return `
-            <div class="card">
-              ${imgTag}
-              <h3>${title}</h3>
-              <p>${desc}</p>
-              ${linkTag}
-            </div>
-          `;
-        }).join("");
-        document.getElementById(target).innerHTML = html;
-      } else {
-        document.getElementById(target).innerHTML = marked.parse(md);
-      }
+      return res.text();
     }
 
-    loadMarkdown("about.md", "about-content");
-    loadMarkdown("projects.md", "projects-content", true);
-    loadMarkdown("contacts.md", "contacts-content");
+    async function loadProjects(file, target) {
+      const res = await fetch(file);
+      const md = await res.text();
+      const blocks = md.split(/^---$/m);
+      const html = blocks.map(block => {
+        const lines = block.trim().split("\n");
+        const title = lines[0].replace(/^#\s*/, "");
+        const icon = lines.find(l => l.startsWith("icon:"))?.replace("icon:", "").trim();
+        const image = lines.find(l => l.startsWith("image:"))?.replace("image:", "").trim();
+        const link = lines.find(l => l.startsWith("link:"))?.replace("link:", "").trim();
+        const desc = lines.find(l => l.startsWith("desc:"))?.replace("desc:", "").trim();
+        return `
+          <div class="project-card">
+            ${icon ? `<img class="icon" src="${icon}" alt="${title} icon">` : ""}
+            <h3>${title}</h3>
+            ${desc ? `<p>${desc}</p>` : ""}
+            ${link ? `<a href="${link}" target="_blank">Learn more →</a>` : ""}
+            ${image ? `<img class="screenshot" src="${image}" alt="${title} screenshot">` : ""}
+          </div>
+        `;
+      }).join("");
+      document.getElementById(target).innerHTML = html;
+    }
+
+    loadMarkdown("about.md").then(md => {
+      document.getElementById("about-content").innerHTML = marked.parse(md);
+    });
+    loadProjects("projects.md", "projects-content");
+    loadMarkdown("contacts.md").then(md => {
+      document.getElementById("contacts-content").innerHTML = marked.parse(md);
+    });
   </script>
 </body>
 </html>
