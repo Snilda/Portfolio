@@ -1,177 +1,439 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Exported Figma Design</title>
-  <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
+  <title>Portfolio - Kirill Rybalko</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* 1. Глобальные стили и сброс */
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #FFFFFF;
+      color: #111111;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    /* Стилизация скроллбара для Webkit-браузеров (Chrome, Safari) */
+    .projects-grid::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .projects-grid::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .projects-grid::-webkit-scrollbar-thumb {
+        background: #cccccc;
+        border-radius: 10px;
+    }
+
+    .projects-grid::-webkit-scrollbar-thumb:hover {
+        background: #aaaaaa;
+    }
+
+
+    /* 2. Главный контейнер для центрирования контента */
+    .page-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 20px 40px 20px; /* Увеличен верхний отступ */
+    }
+
+    /* 3. Верхний блок (Header) */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 80px;
+    }
+
+    .header-intro {
+      max-width: 500px;
+    }
+    
+    .header-intro h1 {
+        font-weight: 600;
+        font-size: 60px; 
+        line-height: 72px; 
+        letter-spacing: -1.64px;
+    }
+
+    .header-intro p {
+      font-size: 16px;
+      color: #555555;
+      margin: 0;
+    }
+
+    /* ИЗМЕНЕНИЕ: Плавающая кнопка */
+    .download-cv-button {
+      position: fixed; /* Фиксированное позиционирование */
+      top: 20px;
+      right: 20px;
+      z-index: 1000; /* Чтобы кнопка была поверх других элементов */
+
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border: 1px solid #E0E0E0;
+      border-radius: 8px;
+      background-color: #FFFFFF;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+    }
+    
+    .download-cv-button:hover {
+        transform: translateY(-2px);
+    }
+    
+    .download-cv-button svg {
+       width: 12px;
+       height: 12px;
+    }
+
+    /* 4. Блок с информацией о дизайнере */
+    .about-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 40px;
+        margin-bottom: 100px;
+    }
+
+    .about-text {
+        flex: 1;
+    }
+
+    .about-text h2 {
+     font-weight: 900;
+      font-style: italic;
+      font-size: 60px; 
+      line-height: 72px;
+      letter-spacing: -1.64px;
+      color: var(--text-rgb-17-17-17);
+    }
+
+    .about-text p {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #333333;
+        max-width: 550px;
+    }
+    
+    .about-photo-wrapper {
+        background-color: #F5F5F5;
+        border-radius: 24px;
+        padding: 20px;
+        flex-shrink: 0;
+    }
+
+    .about-photo {
+        width: 300px;
+        height: auto;
+        border-radius: 16px;
+        display: block;
+    }
+
+    /* 5. Секция "Projects" */
+    .projects-section {
+        margin-bottom: 100px;
+    }
+
+    .section-title {
+        font-size: 32px;
+        font-weight: 600;
+        margin: 0 0 32px 0;
+        border-bottom: 2px solid #E0E0E0;
+        padding-bottom: 8px;
+    }
+
+    /* ИЗМЕНЕНИЕ: Горизонтальный скролл для проектов */
+    .projects-grid {
+      display: flex; /* Изменено с grid на flex */
+      overflow-x: auto; /* Добавлен горизонтальный скролл */
+      gap: 24px;
+      padding-bottom: 20px; /* Отступ для скроллбара */
+      -ms-overflow-style: -ms-autohiding-scrollbar; /* Для IE/Edge */
+      scrollbar-width: thin; /* Для Firefox */
+    }
+
+    .project-card {
+      background-color: #F5F5F5;
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      width: 270px; /* Задаем фиксированную ширину карточкам */
+      flex-shrink: 0; /* Запрещаем карточкам сжиматься */
+    }
+    
+    .project-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    
+    .project-card-header h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0;
+      line-height: 1.4;
+    }
+    
+    .project-card-header .icon {
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+        background-color: #e0e0e0; /* Placeholder for icon */
+        border-radius: 50%;
+    }
+
+    .project-card p {
+        font-size: 14px;
+        line-height: 1.5;
+        color: #333;
+        margin: 12px 0 16px 0;
+        flex-grow: 1;
+    }
+
+    .project-card-image {
+        width: 100%;
+        border-radius: 8px;
+        margin-bottom: 16px;
+    }
+
+    .project-tag {
+        align-self: flex-start;
+        background-color: #FFFFFF;
+        border: 1px solid #E0E0E0;
+        border-radius: 8px;
+        padding: 6px 12px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+    
+    /* 6. Секция "Experience and education" */
+    .experience-section {
+        margin-bottom: 100px;
+    }
+    
+    .experience-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+    }
+    
+    .experience-column .item {
+        margin-bottom: 24px;
+    }
+    
+    .experience-column .item p {
+        margin: 0;
+    }
+    
+    .item-meta {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 4px !important;
+    }
+
+    .item-title {
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    /* 7. Кнопка "Get in touch" */
+    .cta-button {
+      display: block;
+      width: 100%;
+      background-color: #0052FF;
+      color: #FFFFFF;
+      font-size: 24px;
+      font-weight: 600;
+      text-align: center;
+      padding: 32px 20px;
+      border-radius: 16px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+    }
+    
+    /* 8. Адаптивность */
+    @media (max-width: 1024px) {
+        .about-section {
+            flex-direction: column;
+            text-align: center;
+        }
+        .about-text p {
+            max-width: 100%;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .page-wrapper {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+        .header {
+            flex-direction: column;
+            gap: 20px;
+        }
+        .header-intro h1 {
+            font-size: 32px;
+        }
+        .experience-grid {
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+    }
+
+  </style>
 </head>
 <body>
-<div class="landing-1">
-<div class="wireframe-2-2">
-<p class="text-3"><span class="text-black">Product designer specialized
-in design systems and UX/UI design.</span></p>
-<p class="text-4"><span class="text-rgb-85-85-85">Based in Berlin</span></p>
-</div>
-<div class="frame-2136137179-5">
-<div class="frame-2136137181-6">
-<p class="text-7"><span class="text-rgb-17-17-17">Projects</span></p>
-<img src="images/vector-3-8.svg" class="vector-3-8" alt="vector-3" />
-</div>
-<div class="frame-2136137180-9">
-<div class="card-10">
-<div class="frame-2136137175-11">
-<div class="frame-2136137176-12">
-<div class="frame-2136137174-13">
-<p class="text-14"><span class="text-rgb-17-17-17">Largest investment bank in Russia</span></p>
-<div class="frame-2-15">
-<img src="images/image-3-16.png" class="image-3-16" alt="image-3" />
-</div>
-</div>
-<p class="text-17"><span class="text-rgb-17-17-17">Developed a scalable design system for the entire product ecosystem of BCS Financial Group</span></p>
-</div>
-<img src="images/rectangle-37672106-18.png" class="rectangle-37672106-18" alt="rectangle-37672106" />
-<div class="frame-2136137178-19">
-<p class="text-20"><span class="text-black">Design system</span></p>
-</div>
-</div>
-</div>
-<div class="card-21">
-<div class="frame-2136137175-22">
-<div class="frame-2136137176-23">
-<div class="frame-2136137174-24">
-<p class="text-25"><span class="text-rgb-17-17-17">Largest investment bank in Russia</span></p>
-<div class="frame-2-26">
-<img src="images/image-3-27.png" class="image-3-27" alt="image-3" />
-</div>
-</div>
-<p class="text-28"><span class="text-rgb-17-17-17">Developed a scalable design system for the entire product ecosystem of BCS Financial Group</span></p>
-</div>
-<img src="images/rectangle-37672106-29.png" class="rectangle-37672106-29" alt="rectangle-37672106" />
-<div class="frame-2136137178-30">
-<p class="text-31"><span class="text-black">Design system</span></p>
-</div>
-</div>
-</div>
-<div class="card-32">
-<div class="frame-2136137175-33">
-<div class="frame-2136137176-34">
-<div class="frame-2136137174-35">
-<p class="text-36"><span class="text-rgb-17-17-17">Largest investment bank in Russia</span></p>
-<div class="frame-2-37">
-<img src="images/image-3-38.png" class="image-3-38" alt="image-3" />
-</div>
-</div>
-<p class="text-39"><span class="text-rgb-17-17-17">Developed a scalable design system for the entire product ecosystem of BCS Financial Group</span></p>
-</div>
-<img src="images/rectangle-37672106-40.png" class="rectangle-37672106-40" alt="rectangle-37672106" />
-<div class="frame-2136137178-41">
-<p class="text-42"><span class="text-black">Design system</span></p>
-</div>
-</div>
-</div>
-<div class="card-43">
-<div class="frame-2136137175-44">
-<div class="frame-2136137176-45">
-<div class="frame-2136137174-46">
-<p class="text-47"><span class="text-rgb-17-17-17">Largest investment bank in Russia</span></p>
-<div class="frame-2-48">
-<img src="images/image-3-49.png" class="image-3-49" alt="image-3" />
-</div>
-</div>
-<p class="text-50"><span class="text-rgb-17-17-17">Developed a scalable design system for the entire product ecosystem of BCS Financial Group</span></p>
-</div>
-<img src="images/rectangle-37672106-51.png" class="rectangle-37672106-51" alt="rectangle-37672106" />
-<div class="frame-2136137178-52">
-<p class="text-53"><span class="text-black">Design system</span></p>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="frame-2136137182-54">
-<div class="frame-2136137181-55">
-<p class="text-56"><span class="text-rgb-17-17-17">Kirill Rybalko</span></p>
-<img src="images/vector-3-57.svg" class="vector-3-57" alt="vector-3" />
-</div>
-<img src="images/rectangle-37672107-58.png" class="rectangle-37672107-58" alt="rectangle-37672107" />
-<div class="frame-2136137183-59">
-<p class="text-60"><span class="text-rgb-17-17-17">7+ years of experience in FinTech, SaaS, and startups, with a focus on design systems and scalable UX/UI design. Skilled at leading teams and building design culture. Dedicated to creating consistent, cross-platform experiences that scale across products. Currently based in Berlin.</span></p>
-</div>
-</div>
-<div class="frame-2136137204-61">
-<div class="frame-2136137201-62">
-<div class="frame-2136137184-63">
-<p class="text-64"><span class="text-rgb-17-17-17">Experience and education</span></p>
-<img src="images/vector-3-65.svg" class="vector-3-65" alt="vector-3" />
-</div>
-</div>
-<div class="frame-2136137203-66">
-<div class="frame-2136137194-67">
-<div class="frame-2136137191-68">
-<p class="text-69"><span class="text-rgb-17-17-17">BCS FG ⋅ 2024 – Present</span></p>
-<p class="text-70"><span class="text-rgb-17-17-17">Neobank Design Lead</span></p>
-</div>
-<div class="frame-2136137194-71">
-<p class="text-72"><span class="text-rgb-17-17-17">BCS FG ⋅ 2022 – 2024</span></p>
-<p class="text-73"><span class="text-rgb-17-17-17">Design System Lead</span></p>
-</div>
-<div class="frame-2136137195-74">
-<p class="text-75"><span class="text-rgb-17-17-17">AAA Lab ⋅ 2021 – 2022</span></p>
-<p class="text-76"><span class="text-rgb-17-17-17">Head of Design</span></p>
-</div>
-<div class="frame-2136137196-77">
-<p class="text-78"><span class="text-rgb-17-17-17">MySky ⋅ 2020 – 2021</span></p>
-<p class="text-79"><span class="text-rgb-17-17-17">Principal Product Designer</span></p>
-</div>
-<div class="frame-2136137197-80">
-<p class="text-81"><span class="text-rgb-17-17-17">BCS FG ⋅ 2019 – 2020</span></p>
-<p class="text-82"><span class="text-rgb-17-17-17">Product Designer</span></p>
-</div>
-<div class="frame-2136137198-83">
-<p class="text-84"><span class="text-rgb-17-17-17">Freelance ⋅ 2018 – 2019</span></p>
-<p class="text-85"><span class="text-rgb-17-17-17">Digital Designer</span></p>
-</div>
-</div>
-<div class="frame-2136137202-86">
-<div class="frame-2136137194-87">
-<p class="text-88"><span class="text-rgb-17-17-17">BBE ⋅ Yuri Vetrov ⋅ 2023</span></p>
-<p class="text-89"><span class="text-rgb-17-17-17">Design Management Patterns</span></p>
-</div>
-<div class="frame-2136137197-90">
-<p class="text-91"><span class="text-rgb-17-17-17">Dribbble ⋅ 2022</span></p>
-<p class="text-92"><span class="text-rgb-17-17-17">Product design</span></p>
-</div>
-<div class="frame-2136137191-93">
-<p class="text-94"><span class="text-rgb-17-17-17">Skillbox ⋅ 2018</span></p>
-<p class="text-95"><span class="text-rgb-17-17-17">UI/UX Designer PRO</span></p>
-</div>
-<div class="frame-2136137195-96">
-<p class="text-97"><span class="text-rgb-17-17-17">Peoples’ Friendship University of Russia ⋅ 2016 – 2018 ⋅ MSc</span></p>
-<p class="text-98"><span class="text-rgb-17-17-17">Biochemical Technologies and Nanochemistry </span></p>
-</div>
-<div class="frame-2136137196-99">
-<p class="text-100"><span class="text-rgb-17-17-17">Gubkin Russian State University of Oil and Gas ⋅ 2012 – 2016 ⋅ BSc</span></p>
-<p class="text-101"><span class="text-rgb-17-17-17">Chemical technologies and ecology. Oil refining</span></p>
-</div>
-</div>
-</div>
-</div>
-<div class="frame-2136137184-102">
-<div class="frame-2136137181-103">
-<p class="text-104"><span class="text-white">Get in touch</span></p>
-<img src="images/vector-3-105.svg" class="vector-3-105" alt="vector-3" />
-</div>
-</div>
-<div class="frame-2136137199-106">
-<p class="text-107"><span class="text-black">Download CV</span></p>
-<div class="frame-2136137200-108">
-<img src="images/vector-4-109.svg" class="vector-4-109" alt="vector-4" />
-</div>
-</div>
+
+<button class="download-cv-button">
+    <span>Download CV</span>
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+
+<div class="page-wrapper">
+
+    <header class="header">
+        <div class="header-intro">
+            <h1>Product designer specialized in design systems and UX/UI design.</h1>
+            <p>Based in Berlin</p>
+        </div>
+        </header>
+
+    <section class="about-section">
+        <div class="about-text">
+            <h2>Kirill Rybalko</h2>
+            <p>7+ years of experience in FinTech, SaaS, and startups, with a focus on design systems and scalable UX/UI design. Skilled at leading teams and building design culture. Dedicated to creating consistent, cross-platform experiences that scale across products. Currently based in Berlin.</p>
+        </div>
+        <div class="about-photo-wrapper">
+            <img src="images/rectangle-37672107-58.png" alt="Photo" class="about-photo">
+        </div>
+    </section>
+
+    <section class="projects-section">
+        <h2 class="section-title">Projects</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="project-card-header">
+                    <h3>Largest investment bank in Russia</h3>
+                    <div class="icon"></div>
+                </div>
+                <p>Developed a scalable design system for the entire product ecosystem of BCS Financial Group</p>
+                <img src="images/rectangle-37672106-18.png" alt="Project mockup" class="project-card-image">
+                <div class="project-tag">Design system</div>
+            </div>
+            <div class="project-card">
+                <div class="project-card-header">
+                    <h3>Largest investment bank in Russia</h3>
+                    <div class="icon"></div>
+                </div>
+                <p>Developed a scalable design system for the entire product ecosystem of BCS Financial Group</p>
+                <img src="images/rectangle-37672106-18.png" alt="Project mockup" class="project-card-image">
+                <div class="project-tag">Design system</div>
+            </div>
+            <div class="project-card">
+                <div class="project-card-header">
+                    <h3>Largest investment bank in Russia</h3>
+                    <div class="icon"></div>
+                </div>
+                <p>Developed a scalable design system for the entire product ecosystem of BCS Financial Group</p>
+                <img src="images/rectangle-37672106-18.png" alt="Project mockup" class="project-card-image">
+                <div class="project-tag">Design system</div>
+            </div>
+            <div class="project-card">
+                <div class="project-card-header">
+                    <h3>Largest investment bank in Russia</h3>
+                    <div class="icon"></div>
+                </div>
+                <p>Developed a scalable design system for the entire product ecosystem of BCS Financial Group</p>
+                <img src="images/rectangle-37672106-18.png" alt="Project mockup" class="project-card-image">
+                <div class="project-tag">Design system</div>
+            </div>
+             <div class="project-card">
+                <div class="project-card-header">
+                    <h3>Another major project</h3>
+                    <div class="icon"></div>
+                </div>
+                <p>This is another project card to demonstrate the horizontal scrolling functionality effectively.</p>
+                <img src="images/rectangle-37672106-18.png" alt="Project mockup" class="project-card-image">
+                <div class="project-tag">UX Research</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="experience-section">
+        <h2 class="section-title">Experience and education</h2>
+        <div class="experience-grid">
+            <div class="experience-column">
+                <div class="item">
+                    <p class="item-meta">BCS FG ⋅ 2024 – Present</p>
+                    <p class="item-title">Neobank Design Lead</p>
+                </div>
+                <div class="item">
+                    <p class="item-meta">BCS FG ⋅ 2022 – 2024</p>
+                    <p class="item-title">Design System Lead</p>
+                </div>
+                <div class="item">
+                    <p class="item-meta">AAA Lab ⋅ 2021 – 2022</p>
+                    <p class="item-title">Head of Design</p>
+                </div>
+                <div class="item">
+                    <p class="item-meta">MySky ⋅ 2020 – 2021</p>
+                    <p class="item-title">Principal Product Designer</p>
+                </div>
+                <div class="item">
+                    <p class="item-meta">BCS FG ⋅ 2019 – 2020</p>
+                    <p class="item-title">Product Designer</p>
+                </div>
+                 <div class="item">
+                    <p class="item-meta">Freelance ⋅ 2018 – 2019</p>
+                    <p class="item-title">Digital Designer</p>
+                </div>
+            </div>
+            <div class="experience-column">
+                 <div class="item">
+                    <p class="item-meta">BBE ⋅ Yuri Vetrov ⋅ 2023</p>
+                    <p class="item-title">Design Management Patterns</p>
+                </div>
+                 <div class="item">
+                    <p class="item-meta">Dribbble ⋅ 2022</p>
+                    <p class="item-title">Product design</p>
+                </div>
+                 <div class="item">
+                    <p class="item-meta">Skillbox ⋅ 2018</p>
+                    <p class="item-title">UI/UX Designer PRO</p>
+                </div>
+                 <div class="item">
+                    <p class="item-meta">Peoples’ Friendship University of Russia ⋅ 2016 – 2018 ⋅ MSc</p>
+                    <p class="item-title">Biochemical Technologies and Nanochemistry</p>
+                </div>
+                 <div class="item">
+                    <p class="item-meta">Gubkin Russian State University of Oil and Gas ⋅ 2012 – 2016 ⋅ BSc</p>
+                    <p class="item-title">Chemical technologies and ecology. Oil refining</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <button class="cta-button">Get in touch</button>
+
 </div>
 
 </body>
